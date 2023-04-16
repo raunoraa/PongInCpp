@@ -1,5 +1,6 @@
 CXX := g++
-CXXFLAGS := -g -std=c++20 -Wall -Werror -Wpedantic -Wconversion -I./include -I./assets
+CXXFLAGS := -g -std=c++20 -Wall -Werror -Wpedantic -Wconversion -Iinclude
+LDFLAGS := -L./lib -lmingw32 -lSDL2main -lSDL2
 
 #käsurealt argumentide andmiseks (võib ka tühjaks jääda)
 ARGS:=
@@ -21,7 +22,7 @@ O_FAILID := $(LISA_CPP_FAILID:src/%.cpp=$(O_KAUST)/%.o)
 $(TARGET).exe: $(TARGET).cpp $(O_FAILID) .FORCE
 	@echo.
 	@echo Kompileerime programmi
-	$(CXX) $(CXXFLAGS) $(TARGET).cpp $(O_FAILID) -o $(EXE_NIMI)
+	$(CXX) $(CXXFLAGS) $(TARGET).cpp $(O_FAILID) -o $(EXE_NIMI) $(LDFLAGS)
 	@echo Kompileeritud!
 	@echo.
 
