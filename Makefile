@@ -14,6 +14,10 @@ TARGET := src/mainfile/main
 #lisafailid (mõlemad võivad ka tühjaks jääda)
 LISA_CPP_FAILID := $(wildcard src/*.cpp)
 O_KAUST := obj
+
+$(shell if not exist assets mkdir assets)
+$(shell if not exist $(O_KAUST) mkdir $(O_KAUST))
+
 O_FAILID := $(LISA_CPP_FAILID:src/%.cpp=$(O_KAUST)/%.o)
 
 
@@ -44,7 +48,7 @@ clean:
 	@echo Kustutame .exe ja .o failid
 	@echo.
 	@if exist $(EXE_NIMI).exe del *.exe
-	@if exist $(O_KAUST)\* del /Q /F $(O_KAUST)\*
+	@if exist $(O_KAUST) rd /S /Q $(O_KAUST)
 	@echo.
 	@echo Kustutatud!
 	@echo.
