@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include "../include/allheaders.h"
 #include <iostream>
+#include <fstream>
 
 const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
@@ -21,9 +22,14 @@ int main(int argc, char* args[])
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
+    SDL_Surface* iconSurface = SDL_LoadBMP("./assets/proov.bmp");
+
+    SDL_SetWindowIcon(window,iconSurface);
+    SDL_FreeSurface(iconSurface);
+
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 
     bool running = true;
     while (running)
