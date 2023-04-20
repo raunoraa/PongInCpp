@@ -3,5 +3,5 @@
  * 
  */
 
-#include "other1.h"
-#include "other2.h"
+#include "paddle.h"
+#include "ball.h"
