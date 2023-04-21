@@ -7,6 +7,12 @@ const int SCREEN_WIDTH = 1280;
 const int SCREEN_HEIGHT = 720;
 const int PADDLE_SPEED = 1;
 
+const int TARGET_FPS = 360;
+const int TIME_STEP = 1000 / TARGET_FPS;
+
+Uint32 lastUpdateTime = SDL_GetTicks();
+int accumulatedTime = 0;
+
 void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboardState){
     //player1
     if (keyboardState[SDL_SCANCODE_W]) {
@@ -50,10 +56,17 @@ int main(int argc, char* args[])
 
     SDL_Event event;
 
-    unsigned char updatePaddle{};
+    //unsigned char updatePaddle{};
 
     while (running)
     {
+
+        Uint32 currentTime = SDL_GetTicks();
+        Uint32 deltaTime = currentTime - lastUpdateTime;
+        lastUpdateTime = currentTime;
+
+        accumulatedTime += deltaTime;
+
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -63,21 +76,32 @@ int main(int argc, char* args[])
             
         }
 
+        /*
         updatePaddle += 1;
         if (updatePaddle > 15)
         {
             updatePaddle = 0;
         }
+        */
 
         // Get the state of the keyboard
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
-        if(updatePaddle%2==0){
+        /*
+        if(updatePaddle%8==0){
             // Update object position based on keyboard input
-            // Selleks, et oleks aeglasem, teeme seda igal 16. iteratsioonil
+            // Selleks, et oleks aeglasem, teeme seda igal 2. iteratsioonil
             CheckAndMovePaddles(paddle1,paddle2,keyboardState);
             ball.Move();
             ball.CheckPaddleCollisions();
+        }
+        */
+
+        while (accumulatedTime >= TIME_STEP) {
+            CheckAndMovePaddles(paddle1,paddle2,keyboardState);
+            ball.Move();
+            ball.CheckPaddleCollisions();
+            accumulatedTime -= TIME_STEP;
         }
 
         //paddle'ite debugimiseks
@@ -90,8 +114,12 @@ int main(int argc, char* args[])
         paddle1.render();
         paddle2.render();
         ball.Draw(renderer);
-
         SDL_RenderPresent(renderer);
+
+        int remainingTime = TIME_STEP - accumulatedTime;
+        if (remainingTime > 0) {
+            SDL_Delay(remainingTime);
+        }
     }
 
     SDL_DestroyRenderer(renderer);
