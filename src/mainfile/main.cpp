@@ -70,7 +70,7 @@ int main(int argc, char* args[])
         // Get the state of the keyboard
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
-        if(updatePaddle%16==0){
+        if(updatePaddle%2==0){
             // Update object position based on keyboard input
             // Selleks, et oleks aeglasem, teeme seda igal 16. iteratsioonil
             CheckAndMovePaddles(paddle1,paddle2,keyboardState);
