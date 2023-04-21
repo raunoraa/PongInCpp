@@ -44,6 +44,8 @@ int main(int argc, char* args[])
 
     Paddle paddle2(renderer, SCREEN_WIDTH-20*4, 200, 20, 100, SCREEN_HEIGHT);
 
+    Ball ball;
+
     bool running = true;
 
     SDL_Event event;
@@ -74,6 +76,8 @@ int main(int argc, char* args[])
             // Update object position based on keyboard input
             // Selleks, et oleks aeglasem, teeme seda igal 16. iteratsioonil
             CheckAndMovePaddles(paddle1,paddle2,keyboardState);
+            ball.Move();
+            ball.CheckPaddleCollisions();
         }
 
         //paddle'ite debugimiseks
@@ -85,6 +89,7 @@ int main(int argc, char* args[])
         // draw game objects
         paddle1.render();
         paddle2.render();
+        ball.Draw(renderer);
 
         SDL_RenderPresent(renderer);
     }
