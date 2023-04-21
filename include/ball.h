@@ -11,6 +11,7 @@ class Ball {
         void Move();
         void Draw(SDL_Renderer* renderer);
         void CheckPaddleCollisions();
+        void CheckWallCollisions();
         void HandleCollision();
 
     private:
@@ -22,4 +23,4 @@ class Ball {
         int velocityY;
 };
 
-#endif 
+#endif

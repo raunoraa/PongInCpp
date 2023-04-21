@@ -16,6 +16,8 @@ Ball::~Ball() {
 void Ball::Move() {
     x += velocityX;
     y += velocityY;
+    CheckWallCollisions();
+    CheckPaddleCollisions();
 }
 
 void Ball::Draw(SDL_Renderer* renderer) {
@@ -36,6 +38,24 @@ void Ball::CheckPaddleCollisions() {
     // Check collision with right paddle
     if (x >= 650 && y >= 0 && y <= 600) {
         HandleCollision();
+    }
+    
+}
+
+void Ball::CheckWallCollisions() {
+    // Check collision with top wall
+    if (y <= 0) {
+        velocityY = -velocityY;
+    }
+    // Check collision with bottom wall
+    if (y + height >= 720) {
+        velocityY = -velocityY;
+    }
+     if (x + width >= 1280) {
+        velocityX = -velocityX;
+    }
+     if (x + width <= 0) {
+        velocityX = -velocityX;
     }
 }
 
