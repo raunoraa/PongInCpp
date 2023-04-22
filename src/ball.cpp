@@ -1,5 +1,4 @@
 #include "../include/ball.h"
-#include <iostream>
 
 Ball::Ball() {
     m_x = 640;
@@ -17,6 +16,11 @@ void Ball::Move() {
     CheckPaddleCollisions();
 }
 
+void Ball::Center(){
+    m_x = m_SCREEN_WIDTH/2;
+    m_y = m_SCREEN_HEIGHT/2;
+}
+
 void Ball::Draw(SDL_Renderer* renderer) {
     SDL_Rect rect;
     rect.x = m_x;
@@ -29,30 +33,60 @@ void Ball::Draw(SDL_Renderer* renderer) {
 
 void Ball::CheckPaddleCollisions() {
 
-    //std::cout << "LeftPaddlePosX+20: " << m_leftPaddlePosX +20 << " ; LeftPaddlePosY: " << m_leftPaddlePosY << " ; Y+PaddleHeight: " << m_leftPaddlePosY + m_leftPaddleHeight << " ; BallX: " << m_x << " ; BallY+20: " << m_y + m_height << '\n';
-
     // Check collision with left paddle
-    //20 on paddle'i laius (selliste asjade hardcode'imine pole hea tava, seega tuleb tõenäoliselt veel ühe private isendiväljana kaasa anda)
     //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
-    if (m_x == m_leftPaddlePosX + 20 && (m_y >= m_leftPaddlePosY && m_y + m_height/2 <= m_leftPaddlePosY + m_leftPaddleHeight))
+    if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height/2 >= m_leftPaddlePosY && m_y + m_height/2 <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
-        //std::cout << "LeftPaddlePosY: " << m_leftPaddlePosY << " ; Y+PaddleHeight: " << m_leftPaddlePosY + m_leftPaddleHeight << " ; BallY+BallHeight: " << m_y + m_height << '\n';
-        //std::cout << "LEFTPADDLE_COLLISION\n"
-
-        /* Siia tuleb mingi targem loogika, et paddle abil saaks kontrollida palli liikumist */
-        m_x = m_leftPaddlePosX + 20 + 1;
+        
+        //x kiirust on vaja ainult vastupidiseks muuta 
+        //(igaks juhuks lisame palli x positsioonile ka 1, et mitu korda siia if harusse kokkupuutel paddle'iga ei jõutaks)
+        m_x = m_leftPaddlePosX + m_leftPaddleWidth + 1;
         m_velocityX = -m_velocityX;
+
+        //muudame palli y kiirust vastavalt sellele, kuhu pall paddle'il maandus (annab mängijale rohkem kontrolli palli üle)
+        //vaatame, kaugel on palli keskpunkt paddle'i keskpunktist
+        //normaliseerime saadud kauguse lõiku [-2,2] (et kiirused liiga suureks ei läheks)
+        int unnormalized = m_y + m_height/2 - m_leftPaddlePosY - m_leftPaddleHeight/2;
+        int normalized = unnormalized / (m_leftPaddleHeight/5); //5 on saadud proovimise teel (sedasi tundus põrkamine kõige loogilisem)
+        //teeme nii, et vertikaalne kiirus ei läheks üle 2 ega alla -2
+        m_velocityY = normalized; 
+        if (m_velocityY < -2)
+        {
+            m_velocityY = -2;
+        }
+
+        if (m_velocityY > 2)
+        {
+            m_velocityY = 2;
+        }
+
     }
     
 
     // Check collision with right paddle
-    if (m_x + m_width == m_rightPaddlePosX && (m_y >= m_rightPaddlePosY && m_y + m_height/2 <= m_rightPaddlePosY + m_rightPaddleHeight))
-    {
-        //std::cout << "RIGHTPADDLE_COLLISION\n";
-                
+    if (m_x + m_width == m_rightPaddlePosX && (m_y + m_height/2 >= m_rightPaddlePosY && m_y + m_height/2 <= m_rightPaddlePosY + m_rightPaddleHeight))
+    {                
         /* Siia tuleb mingi targem loogika, et paddle abil saaks kontrollida palli liikumist */
         m_x = m_rightPaddlePosX - m_width - 1;
-        m_velocityX = -m_velocityX;        
+        m_velocityX = -m_velocityX;
+
+        //muudame palli y kiirust vastavalt sellele, kuhu pall paddle'il maandus (annab mängijale rohkem kontrolli palli üle)
+        //vaatame, kaugel on palli keskpunkt paddle'i keskpunktist
+        //normaliseerime saadud kauguse lõiku [-2,2] (et kiirused liiga suureks ei läheks)
+        int unnormalized = m_y + m_height/2 - m_rightPaddlePosY - m_rightPaddleHeight/2;
+        int normalized = unnormalized / (m_rightPaddleHeight/5); //5 on saadud proovimise teel (sedasi tundus põrkamine kõige loogilisem)
+        //teeme nii, et vertikaalne kiirus ei läheks üle 2 ega alla -2
+         m_velocityY = normalized;   
+        if (m_velocityY < -2)
+        {
+            m_velocityY = -2;
+        }
+
+        if (m_velocityY > 2)
+        {
+            m_velocityY = 2;
+        }
+
     }
     
 }
@@ -63,14 +97,18 @@ void Ball::CheckWallCollisions() {
         m_velocityY = -m_velocityY;
     }
     // Check collision with bottom wall
-    if (m_y + m_height >= 720) {
+    if (m_y + m_height >= m_SCREEN_HEIGHT) {
         m_velocityY = -m_velocityY;
     }
-     if (m_x + m_width >= 1280) {
-        m_velocityX = -m_velocityX;
+
+    //pall on paremal pool paremat paddle'it, vasak mängija saab punkti
+    if (m_x + m_width >= m_SCREEN_WIDTH) {
+        m_leftScores = true;
     }
-     if (m_x + m_width <= 0) {
-        m_velocityX = -m_velocityX;
+
+    //pall on vasakul pool vasakut paddle'it, parem mängija saab punkti
+    if (m_x <= 0) {
+        m_rightScores = true;
     }
 }
 
@@ -89,6 +127,11 @@ void Ball::setLeftPaddleHeight(int h)
     m_leftPaddleHeight = h;
 }
 
+void Ball::setLeftPaddleWidth(int w)
+{
+    m_leftPaddleWidth = w;
+}
+
 void Ball::setRightPaddlePosX(int x)
 {
     m_rightPaddlePosX = x;
@@ -102,4 +145,42 @@ void Ball::setRightPaddlePosY(int y)
 void Ball::setRightPaddleHeight(int h)
 {
     m_rightPaddleHeight = h;
+}
+
+void Ball::setScreenWidth(int w)
+{
+    m_SCREEN_WIDTH = w;
+}
+
+void Ball::setScreenHeight(int h)
+{
+    m_SCREEN_HEIGHT = h;
+}
+
+bool Ball::getLeftScoresFlag()
+{
+    return m_leftScores;
+}
+
+bool Ball::getRightScoresFlag()
+{
+    return m_rightScores;
+}
+
+void Ball::resetScoreFlags()
+{
+    m_leftScores = false;
+    m_rightScores = false;
+}
+
+void Ball::initializeVelocitiesMoveLeft()
+{
+    m_velocityY = -1;
+    m_velocityX = -1;
+}
+
+void Ball::initializeVelocitiesMoveRight()
+{
+    m_velocityY = -1;
+    m_velocityX = 1;
 }

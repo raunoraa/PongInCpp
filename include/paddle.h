@@ -20,4 +20,6 @@ public:
     int getPosY();
 
     int getPaddleHeight();
+
+    int getPaddleWidth();
 };

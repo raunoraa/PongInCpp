@@ -41,3 +41,8 @@ int Paddle::getPaddleHeight()
 {
     return m_rect.h;
 }
+
+int Paddle::getPaddleWidth()
+{
+    return m_rect.w;
+}

@@ -56,13 +56,22 @@ int main(int argc, char* args[])
     ball.setLeftPaddlePosX(paddle1.getPosX());
     ball.setLeftPaddlePosY(paddle1.getPosY());
     ball.setLeftPaddleHeight(paddle1.getPaddleHeight());
+    ball.setLeftPaddleWidth(paddle1.getPaddleWidth());
 
     ball.setRightPaddlePosX(paddle2.getPosX());
     ball.setLeftPaddlePosY(paddle2.getPosY());
     ball.setRightPaddleHeight(paddle2.getPaddleHeight());
+
+    ball.setScreenWidth(SCREEN_WIDTH);
+    ball.setScreenHeight(SCREEN_HEIGHT);
     
 
     bool running = true;
+
+    bool restartFlag = true;
+
+    bool leftPlayerStarts = true; //esimesel korral alustab vasak mängija
+    ball.initializeVelocitiesMoveLeft();
 
     SDL_Event event;
 
@@ -91,13 +100,47 @@ int main(int argc, char* args[])
 
         while (accumulatedTime >= TIME_STEP) {
 
+            if (restartFlag)
+            {
+                if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
+                    restartFlag = false;
+                }
+                else if (!leftPlayerStarts && (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN]))
+                {
+                    restartFlag = false;
+                }
 
-            CheckAndMovePaddles(paddle1,paddle2,keyboardState);
+            } else
+            {
+                CheckAndMovePaddles(paddle1,paddle2,keyboardState);
 
-            ball.setLeftPaddlePosY(paddle1.getPosY());
-            ball.setRightPaddlePosY(paddle2.getPosY());
+                ball.setLeftPaddlePosY(paddle1.getPosY());
+                ball.setRightPaddlePosY(paddle2.getPosY());
 
-            ball.Move();
+                ball.Move();
+
+                if (ball.getLeftScoresFlag())
+                {
+                    ball.Center();
+                    ball.resetScoreFlags();
+                    ball.initializeVelocitiesMoveLeft();
+                    restartFlag = true;
+                    //vasak mängija saab punkti (TODO) ning saab alustada
+                    leftPlayerStarts = true;
+
+                }
+                else if (ball.getRightScoresFlag())
+                {
+                    ball.Center();
+                    ball.resetScoreFlags();
+                    ball.initializeVelocitiesMoveRight();
+                    restartFlag = true;
+                    //parem mängija saab punkti (TODO) ning saab alustada
+                    leftPlayerStarts = false;
+                }
+            }
+            
+            
 
             accumulatedTime -= TIME_STEP;
         }
