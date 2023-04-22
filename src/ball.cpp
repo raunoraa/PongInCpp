@@ -34,7 +34,7 @@ void Ball::CheckPaddleCollisions() {
     // Check collision with left paddle
     //20 on paddle'i laius (selliste asjade hardcode'imine pole hea tava, seega tuleb tõenäoliselt veel ühe private isendiväljana kaasa anda)
     //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
-    if (m_x <= m_leftPaddlePosX + 20 && (m_y >= m_leftPaddlePosY && m_y + m_height/2 <= m_leftPaddlePosY + m_leftPaddleHeight))
+    if (m_x == m_leftPaddlePosX + 20 && (m_y >= m_leftPaddlePosY && m_y + m_height/2 <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
         //std::cout << "LeftPaddlePosY: " << m_leftPaddlePosY << " ; Y+PaddleHeight: " << m_leftPaddlePosY + m_leftPaddleHeight << " ; BallY+BallHeight: " << m_y + m_height << '\n';
         //std::cout << "LEFTPADDLE_COLLISION\n"
@@ -46,7 +46,7 @@ void Ball::CheckPaddleCollisions() {
     
 
     // Check collision with right paddle
-    if (m_x + m_width >= m_rightPaddlePosX && (m_y >= m_rightPaddlePosY && m_y + m_height/2 <= m_rightPaddlePosY + m_rightPaddleHeight))
+    if (m_x + m_width == m_rightPaddlePosX && (m_y >= m_rightPaddlePosY && m_y + m_height/2 <= m_rightPaddlePosY + m_rightPaddleHeight))
     {
         //std::cout << "RIGHTPADDLE_COLLISION\n";
                 
