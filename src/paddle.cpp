@@ -28,3 +28,16 @@ void Paddle::render(){
     SDL_SetRenderDrawColor(m_renderer, 255, 255, 255, 255);
     SDL_RenderFillRect(m_renderer, &m_rect);
 }
+
+int Paddle::getPosX(){
+    return m_rect.x;
+}
+
+int Paddle::getPosY(){
+    return m_rect.y;
+}
+
+int Paddle::getPaddleHeight()
+{
+    return m_rect.h;
+}

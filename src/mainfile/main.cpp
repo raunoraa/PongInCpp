@@ -52,6 +52,16 @@ int main(int argc, char* args[])
 
     Ball ball;
 
+    
+    ball.setLeftPaddlePosX(paddle1.getPosX());
+    ball.setLeftPaddlePosY(paddle1.getPosY());
+    ball.setLeftPaddleHeight(paddle1.getPaddleHeight());
+
+    ball.setRightPaddlePosX(paddle2.getPosX());
+    ball.setLeftPaddlePosY(paddle2.getPosY());
+    ball.setRightPaddleHeight(paddle2.getPaddleHeight());
+    
+
     bool running = true;
 
     SDL_Event event;
@@ -76,31 +86,19 @@ int main(int argc, char* args[])
             
         }
 
-        /*
-        updatePaddle += 1;
-        if (updatePaddle > 15)
-        {
-            updatePaddle = 0;
-        }
-        */
-
         // Get the state of the keyboard
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
-        /*
-        if(updatePaddle%8==0){
-            // Update object position based on keyboard input
-            // Selleks, et oleks aeglasem, teeme seda igal 2. iteratsioonil
-            CheckAndMovePaddles(paddle1,paddle2,keyboardState);
-            ball.Move();
-            ball.CheckPaddleCollisions();
-        }
-        */
-
         while (accumulatedTime >= TIME_STEP) {
+
+
             CheckAndMovePaddles(paddle1,paddle2,keyboardState);
+
+            ball.setLeftPaddlePosY(paddle1.getPosY());
+            ball.setRightPaddlePosY(paddle2.getPosY());
+
             ball.Move();
-            ball.CheckPaddleCollisions();
+
             accumulatedTime -= TIME_STEP;
         }
 

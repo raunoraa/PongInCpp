@@ -15,12 +15,9 @@ public:
 
     void render();
 
-    int getPosX(){
-        return m_rect.x;
-    }
+    int getPosX();
+    
+    int getPosY();
 
-    int getPosY(){
-        return m_rect.y;
-    }
-
+    int getPaddleHeight();
 };
