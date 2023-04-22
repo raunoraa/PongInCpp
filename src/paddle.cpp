@@ -29,6 +29,11 @@ void Paddle::render(){
     SDL_RenderFillRect(m_renderer, &m_rect);
 }
 
+void Paddle::resetPaddlePos()
+{
+    m_rect.y = m_screenHeight/3;
+}
+
 int Paddle::getPosX(){
     return m_rect.x;
 }
@@ -46,3 +51,5 @@ int Paddle::getPaddleWidth()
 {
     return m_rect.w;
 }
+
+

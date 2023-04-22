@@ -15,6 +15,8 @@ public:
 
     void render();
 
+    void resetPaddlePos();
+
     int getPosX();
     
     int getPosY();

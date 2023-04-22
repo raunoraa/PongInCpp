@@ -46,9 +46,9 @@ int main(int argc, char* args[])
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
 
-    Paddle paddle1(renderer, 20*3, 200, 20, 100, SCREEN_HEIGHT);
+    Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
-    Paddle paddle2(renderer, SCREEN_WIDTH-20*4, 200, 20, 100, SCREEN_HEIGHT);
+    Paddle paddle2(renderer, SCREEN_WIDTH-20*4, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
     Ball ball;
 
@@ -124,6 +124,8 @@ int main(int argc, char* args[])
                     ball.Center();
                     ball.resetScoreFlags();
                     ball.initializeVelocitiesMoveLeft();
+                    paddle1.resetPaddlePos();
+                    paddle2.resetPaddlePos();
                     restartFlag = true;
                     //vasak mängija saab punkti (TODO) ning saab alustada
                     leftPlayerStarts = true;
@@ -134,6 +136,8 @@ int main(int argc, char* args[])
                     ball.Center();
                     ball.resetScoreFlags();
                     ball.initializeVelocitiesMoveRight();
+                    paddle1.resetPaddlePos();
+                    paddle2.resetPaddlePos();
                     restartFlag = true;
                     //parem mängija saab punkti (TODO) ning saab alustada
                     leftPlayerStarts = false;
