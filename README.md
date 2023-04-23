@@ -22,3 +22,6 @@ Esialju alustab mängu vasak mängija, ehk selleks, et midagi juhtuks peab vasak
 Käsk MinGW32-make run kompileerib ning käivitab .exe faili.
 Käsk MinGW32-make clean kustutab .exe faili ja o failidega kausta.
 Hiljem saab mängu käivitada lihtsalt .exe failist.
+
+# GitHubi link
+https://github.com/raunoraa/PongInCpp/edit/main/README.md
