@@ -17,9 +17,6 @@ int accumulatedTime = 0;
 int leftScore = 0;
 int rightScore = 0;
 
-// Define font variable
-TTF_Font* font = TTF_OpenFont("assets/FreeSansBold.ttf", 24);
-
 void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboardState){
     //player1
     if (keyboardState[SDL_SCANCODE_W]) {
@@ -42,11 +39,13 @@ int main(int argc, char* args[])
 {
     SDL_Init( SDL_INIT_EVERYTHING );
 
-    SDL_Window* window = SDL_CreateWindow("Pong Game AMONG US SUSUSUSUSUS",
+    SDL_Window* window = SDL_CreateWindow("Pong Game",
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
     SDL_Surface* iconSurface = SDL_LoadBMP("./assets/proov.bmp");
+    std::string windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+    SDL_SetWindowTitle(window, windowTitle.c_str());
 
     SDL_SetWindowIcon(window,iconSurface);
     SDL_FreeSurface(iconSurface);
@@ -137,6 +136,9 @@ int main(int argc, char* args[])
                     restartFlag = true;
                     leftScore++;
                     //vasak mängija saab punkti (TODO) ning saab alustada
+                    //Uuendab akna nime, et skoor oleks uuendatud
+                    windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+                    SDL_SetWindowTitle(window, windowTitle.c_str());
                     leftPlayerStarts = true;
 
                 }
@@ -150,24 +152,15 @@ int main(int argc, char* args[])
                     restartFlag = true;
                     rightScore++;
                     //parem mängija saab punkti (TODO) ning saab alustada
+                    //Uuendab akna nime, et skoor oleks uuendatud
+                    windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+                    SDL_SetWindowTitle(window, windowTitle.c_str());
                     leftPlayerStarts = false;
                 }
-                           std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
+                           //Saab skoori terminali printida
+                           //std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
             }
-            
-            // Draw the score
-            SDL_Color whiteColor = { 255, 255, 255, 255 };
-            SDL_Surface* scoreSurfaceLeft = TTF_RenderText_Solid(font, std::to_string(leftScore).c_str(), whiteColor);
-            SDL_Surface* scoreSurfaceRight = TTF_RenderText_Solid(font, std::to_string(rightScore).c_str(), whiteColor);
-            SDL_Texture* scoreTextureLeft = SDL_CreateTextureFromSurface(renderer, scoreSurfaceLeft);
-            SDL_Texture* scoreTextureRight = SDL_CreateTextureFromSurface(renderer, scoreSurfaceRight);
-            SDL_Rect scoreDestRectRight = { SCREEN_WIDTH * 3 / 4, 10, 20, 20 };
-            SDL_Rect srcRectLeft = { 0, 0, 40, 40 }; // specify the area of the score texture to draw
-            SDL_Rect destRectLeft = { SCREEN_WIDTH / 2 - 20, 10, 40, 40 }; // specify the coordinates of the window where the texture will be drawn
-
-            SDL_RenderCopy(renderer, scoreTextureLeft, &srcRectLeft, &destRectLeft);
-            SDL_RenderCopy(renderer, scoreTextureRight, NULL, &scoreDestRectRight);
-
+    
             accumulatedTime -= TIME_STEP;
         }
 
@@ -193,6 +186,7 @@ int main(int argc, char* args[])
     SDL_DestroyWindow(window);
 
     SDL_Quit();
+    
 
     return 0;
 }
