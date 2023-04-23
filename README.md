@@ -24,4 +24,4 @@ Käsk MinGW32-make clean kustutab .exe faili ja o failidega kausta.
 Hiljem saab mängu käivitada lihtsalt .exe failist.
 
 # GitHubi link
-https://github.com/raunoraa/PongInCpp/edit/main/README.md
+https://github.com/raunoraa/PongInCpp
