@@ -19,5 +19,5 @@ Vasak mängija liigub kasutades W ja S nuppu, parem mängija liigub nooltega, no
 
 # Mängu kompileerimine
 Käsk MinGW32-make run kompileerib ning käivitab .exe faili.
-Käsk MinGW32-make clean kustutab .exe ja o failidega kausta.
+Käsk MinGW32-make clean kustutab .exe faili ja o failidega kausta.
 Hiljem saab mängu käivitada lihtsalt .exe failist.
