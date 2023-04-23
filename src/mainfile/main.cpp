@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include "../include/allheaders.h"
 #include <iostream>
+#include <string>
 #include <fstream>
 
 const int SCREEN_WIDTH = 1280;
@@ -12,6 +14,11 @@ const int TIME_STEP = 1000 / TARGET_FPS;
 
 Uint32 lastUpdateTime = SDL_GetTicks();
 int accumulatedTime = 0;
+int leftScore = 0;
+int rightScore = 0;
+
+// Define font variable
+TTF_Font* font = TTF_OpenFont("assets/FreeSansBold.ttf", 24);
 
 void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboardState){
     //player1
@@ -51,6 +58,7 @@ int main(int argc, char* args[])
     Paddle paddle2(renderer, SCREEN_WIDTH-20*4, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
     Ball ball;
+
 
     
     ball.setLeftPaddlePosX(paddle1.getPosX());
@@ -127,6 +135,7 @@ int main(int argc, char* args[])
                     paddle1.resetPaddlePos();
                     paddle2.resetPaddlePos();
                     restartFlag = true;
+                    leftScore++;
                     //vasak mängija saab punkti (TODO) ning saab alustada
                     leftPlayerStarts = true;
 
@@ -139,12 +148,25 @@ int main(int argc, char* args[])
                     paddle1.resetPaddlePos();
                     paddle2.resetPaddlePos();
                     restartFlag = true;
+                    rightScore++;
                     //parem mängija saab punkti (TODO) ning saab alustada
                     leftPlayerStarts = false;
                 }
+                           std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
             }
             
-            
+            // Draw the score
+            SDL_Color whiteColor = { 255, 255, 255, 255 };
+            SDL_Surface* scoreSurfaceLeft = TTF_RenderText_Solid(font, std::to_string(leftScore).c_str(), whiteColor);
+            SDL_Surface* scoreSurfaceRight = TTF_RenderText_Solid(font, std::to_string(rightScore).c_str(), whiteColor);
+            SDL_Texture* scoreTextureLeft = SDL_CreateTextureFromSurface(renderer, scoreSurfaceLeft);
+            SDL_Texture* scoreTextureRight = SDL_CreateTextureFromSurface(renderer, scoreSurfaceRight);
+            SDL_Rect scoreDestRectRight = { SCREEN_WIDTH * 3 / 4, 10, 20, 20 };
+            SDL_Rect srcRectLeft = { 0, 0, 40, 40 }; // specify the area of the score texture to draw
+            SDL_Rect destRectLeft = { SCREEN_WIDTH / 2 - 20, 10, 40, 40 }; // specify the coordinates of the window where the texture will be drawn
+
+            SDL_RenderCopy(renderer, scoreTextureLeft, &srcRectLeft, &destRectLeft);
+            SDL_RenderCopy(renderer, scoreTextureRight, NULL, &scoreDestRectRight);
 
             accumulatedTime -= TIME_STEP;
         }

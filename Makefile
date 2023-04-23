@@ -1,6 +1,7 @@
+
 CXX := g++
 CXXFLAGS := -g -std=c++20 -Wall -Werror -Wpedantic -Wconversion -Iinclude
-LDFLAGS := -L./lib -lmingw32 -lSDL2main -lSDL2
+LDFLAGS := -L./lib -lmingw32 -lSDL2main -lSDL2 -lSDL2_ttf
 
 #käsurealt argumentide andmiseks (võib ka tühjaks jääda)
 ARGS:=
