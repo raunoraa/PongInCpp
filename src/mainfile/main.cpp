@@ -69,9 +69,9 @@ int main(int argc, char* args[])
     
     SDL_Rect Message_rect; //create a rect
 
-    Message_rect.h = 100;
-    Message_rect.w = 100;
-    Message_rect.x = 600;
+    Message_rect.h = 200;
+    Message_rect.w = 200;
+    Message_rect.x = 550;
     Message_rect.y = 50;
     
 
