@@ -160,7 +160,7 @@ int main(int argc, char* args[])
                     paddle2.resetPaddlePos();
                     restartFlag = true;
                     leftScore++;
-                    //vasak mängija saab punkti (TODO) ning saab alustada
+                    //vasak mängija saab punkti ning saab alustada
                     //Uuendab akna nime, et skoor oleks uuendatud
                     windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                     SDL_SetWindowTitle(window, windowTitle.c_str());
@@ -179,7 +179,7 @@ int main(int argc, char* args[])
                     paddle2.resetPaddlePos();
                     restartFlag = true;
                     rightScore++;
-                    //parem mängija saab punkti (TODO) ning saab alustada
+                    //parem mängija saab punkti ning saab alustada
                     //Uuendab akna nime, et skoor oleks uuendatud
                     windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                     SDL_SetWindowTitle(window, windowTitle.c_str());
