@@ -44,7 +44,7 @@ int main(int argc, char* args[])
         SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
         SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN);
 
-    SDL_Surface* iconSurface = SDL_LoadBMP("./assets/proov.bmp");
+    SDL_Surface* iconSurface = SDL_LoadBMP("./assets/ikoon.bmp");
     std::string windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
     SDL_SetWindowTitle(window, windowTitle.c_str());
 
@@ -52,19 +52,28 @@ int main(int argc, char* args[])
     SDL_FreeSurface(iconSurface);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+    
+    TTF_Init();
 
     //this opens a font style and sets a size
-    TTF_Font* Sans = TTF_OpenFont("OpenSansBold.ttf", 24);
-
+    TTF_Font* Sans = TTF_OpenFont("./assets/OpenSansBold.ttf", 30);
+    
     SDL_Color White = {255, 255, 255};
 
     SDL_Surface* surfaceMessage =
-        TTF_RenderText_Solid(Sans, "Tere JAAN!", White); 
+        TTF_RenderText_Solid(Sans, "Tere JAAN!", White);
 
     // now you can convert it into a texture
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
-    SDL_Rect Message_rect{300, 300, 100, 100 };; //create a rect
+    
+    SDL_Rect Message_rect; //create a rect
+
+    Message_rect.h = 20 + 24;
+    Message_rect.w = (int) (SCREEN_WIDTH/2.3) + 24;
+    Message_rect.x = (int) (SCREEN_WIDTH/2.3);
+    Message_rect.y = 20;
+    
 
     Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
@@ -107,6 +116,7 @@ int main(int argc, char* args[])
 
         accumulatedTime += deltaTime;
 
+        
         while (SDL_PollEvent(&event))
         {
             if (event.type == SDL_QUIT)
@@ -115,6 +125,7 @@ int main(int argc, char* args[])
             }
             
         }
+        
 
         // Get the state of the keyboard
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
@@ -155,6 +166,9 @@ int main(int argc, char* args[])
                     SDL_SetWindowTitle(window, windowTitle.c_str());
                     leftPlayerStarts = true;
 
+                    //Teeme uue Texture objekti vaid siis, kui skoor muutus
+                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " | " + std::to_string(rightScore)).c_str(), White);
+                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                 }
                 else if (ball.getRightScoresFlag())
                 {
@@ -170,6 +184,10 @@ int main(int argc, char* args[])
                     windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                     SDL_SetWindowTitle(window, windowTitle.c_str());
                     leftPlayerStarts = false;
+
+                    //Teeme uue Texture objekti vaid siis, kui skoor muutus
+                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " | " + std::to_string(rightScore)).c_str(), White);
+                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                 }
                            //Saab skoori terminali printida
                            //std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
@@ -188,7 +206,8 @@ int main(int argc, char* args[])
         paddle1.render();
         paddle2.render();
         ball.Draw(renderer);
-        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+
+        SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //DEBUG LINE
 
         SDL_RenderPresent(renderer);
 
@@ -203,6 +222,7 @@ int main(int argc, char* args[])
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(Message);
 
+    TTF_Quit();
     SDL_Quit();
     
 
