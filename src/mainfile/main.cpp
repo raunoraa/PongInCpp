@@ -52,6 +52,13 @@ int main(int argc, char* args[])
     SDL_FreeSurface(iconSurface);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    Uint8 nupu_r = 211;
+    Uint8 nupu_g = 194;
+    Uint8 nupu_b = 255;
+
+    //LOOME MENÜÜ NUPUD
+    Button pvp(renderer, 100, 100, 200, 200, nupu_r, nupu_g, nupu_b);
     
     TTF_Init();
 
@@ -80,8 +87,6 @@ int main(int argc, char* args[])
     Paddle paddle2(renderer, SCREEN_WIDTH-20*4, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
     Ball ball;
-
-
     
     ball.setLeftPaddlePosX(paddle1.getPosX());
     ball.setLeftPaddlePosY(paddle1.getPosY());
@@ -135,9 +140,12 @@ int main(int argc, char* args[])
             
             if (SHOW_MENU_FLAG)
             {
-                //SIIN KUVAME NUPUD
-                
+                //SIIN KUVAME MENÜÜ NUPUD
 
+                if (pvp.checkIfPressed())
+                {
+                    SHOW_MENU_FLAG = false;
+                }
             }
             else{
                 if (restartFlag)
@@ -217,9 +225,13 @@ int main(int argc, char* args[])
             paddle1.render();
             paddle2.render();
             ball.Draw(renderer);
+            SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
+        } else
+        {
+            //JOONISTAME MENÜÜ
+            pvp.render();
         }
-
-        SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //DEBUG LINE
+        
 
         SDL_RenderPresent(renderer);
 
