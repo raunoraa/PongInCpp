@@ -56,12 +56,12 @@ int main(int argc, char* args[])
     TTF_Init();
 
     //this opens a font style and sets a size
-    TTF_Font* Sans = TTF_OpenFont("./assets/OpenSansBold.ttf", 30);
+    TTF_Font* Sans = TTF_OpenFont("./assets/OpenSansBold.ttf", 200);
     
     SDL_Color White = {255, 255, 255};
 
     SDL_Surface* surfaceMessage =
-        TTF_RenderText_Solid(Sans, "Tere JAAN!", White);
+        TTF_RenderText_Solid(Sans, "0 : 0", White);
 
     // now you can convert it into a texture
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
@@ -69,10 +69,10 @@ int main(int argc, char* args[])
     
     SDL_Rect Message_rect; //create a rect
 
-    Message_rect.h = 20 + 24;
-    Message_rect.w = (int) (SCREEN_WIDTH/2.3) + 24;
-    Message_rect.x = (int) (SCREEN_WIDTH/2.3);
-    Message_rect.y = 20;
+    Message_rect.h = 100;
+    Message_rect.w = 100;
+    Message_rect.x = 600;
+    Message_rect.y = 50;
     
 
     Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
@@ -167,7 +167,7 @@ int main(int argc, char* args[])
                     leftPlayerStarts = true;
 
                     //Teeme uue Texture objekti vaid siis, kui skoor muutus
-                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " | " + std::to_string(rightScore)).c_str(), White);
+                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
                     Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                 }
                 else if (ball.getRightScoresFlag())
@@ -186,7 +186,7 @@ int main(int argc, char* args[])
                     leftPlayerStarts = false;
 
                     //Teeme uue Texture objekti vaid siis, kui skoor muutus
-                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " | " + std::to_string(rightScore)).c_str(), White);
+                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
                     Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
                 }
                            //Saab skoori terminali printida
