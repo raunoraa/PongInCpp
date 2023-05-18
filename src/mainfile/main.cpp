@@ -17,6 +17,7 @@ int accumulatedTime = 0;
 int leftScore = 0;
 int rightScore = 0;
 
+
 void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboardState){
     //player1
     if (keyboardState[SDL_SCANCODE_W]) {
@@ -51,6 +52,19 @@ int main(int argc, char* args[])
     SDL_FreeSurface(iconSurface);
 
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, 0);
+
+    //this opens a font style and sets a size
+    TTF_Font* Sans = TTF_OpenFont("OpenSansBold.ttf", 24);
+
+    SDL_Color White = {255, 255, 255};
+
+    SDL_Surface* surfaceMessage =
+        TTF_RenderText_Solid(Sans, "Tere JAAN!", White); 
+
+    // now you can convert it into a texture
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+    SDL_Rect Message_rect{300, 300, 100, 100 };; //create a rect
 
     Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
 
@@ -174,7 +188,10 @@ int main(int argc, char* args[])
         paddle1.render();
         paddle2.render();
         ball.Draw(renderer);
+        SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+
         SDL_RenderPresent(renderer);
+
 
         int remainingTime = TIME_STEP - accumulatedTime;
         if (remainingTime > 0) {
@@ -184,6 +201,7 @@ int main(int argc, char* args[])
 
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    SDL_DestroyTexture(Message);
 
     SDL_Quit();
     
