@@ -103,9 +103,10 @@ int main(int argc, char* args[])
     bool leftPlayerStarts = true; //esimesel korral alustab vasak mängija
     ball.initializeVelocitiesMoveLeft();
 
+    bool SHOW_MENU_FLAG = true;
+
     SDL_Event event;
 
-    //unsigned char updatePaddle{};
 
     while (running)
     {
@@ -131,66 +132,73 @@ int main(int argc, char* args[])
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
         while (accumulatedTime >= TIME_STEP) {
-
-            if (restartFlag)
+            
+            if (SHOW_MENU_FLAG)
             {
-                if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
-                    restartFlag = false;
-                }
-                else if (!leftPlayerStarts && (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN]))
+                //SIIN KUVAME NUPUD
+                
+
+            }
+            else{
+                if (restartFlag)
                 {
-                    restartFlag = false;
-                }
-
-            } else
-            {
-                CheckAndMovePaddles(paddle1,paddle2,keyboardState);
-
-                ball.setLeftPaddlePosY(paddle1.getPosY());
-                ball.setRightPaddlePosY(paddle2.getPosY());
-
-                ball.Move();
-
-                if (ball.getLeftScoresFlag())
+                    if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
+                        restartFlag = false;
+                    }
+                    else if (!leftPlayerStarts && (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN]))
+                    {
+                        restartFlag = false;
+                    }
+                } else
                 {
-                    ball.Center();
-                    ball.resetScoreFlags();
-                    ball.initializeVelocitiesMoveLeft();
-                    paddle1.resetPaddlePos();
-                    paddle2.resetPaddlePos();
-                    restartFlag = true;
-                    leftScore++;
-                    //vasak mängija saab punkti ning saab alustada
-                    //Uuendab akna nime, et skoor oleks uuendatud
-                    windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
-                    SDL_SetWindowTitle(window, windowTitle.c_str());
-                    leftPlayerStarts = true;
+                    CheckAndMovePaddles(paddle1,paddle2,keyboardState);
 
-                    //Teeme uue Texture objekti vaid siis, kui skoor muutus
-                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
-                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-                }
-                else if (ball.getRightScoresFlag())
-                {
-                    ball.Center();
-                    ball.resetScoreFlags();
-                    ball.initializeVelocitiesMoveRight();
-                    paddle1.resetPaddlePos();
-                    paddle2.resetPaddlePos();
-                    restartFlag = true;
-                    rightScore++;
-                    //parem mängija saab punkti ning saab alustada
-                    //Uuendab akna nime, et skoor oleks uuendatud
-                    windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
-                    SDL_SetWindowTitle(window, windowTitle.c_str());
-                    leftPlayerStarts = false;
+                    ball.setLeftPaddlePosY(paddle1.getPosY());
+                    ball.setRightPaddlePosY(paddle2.getPosY());
 
-                    //Teeme uue Texture objekti vaid siis, kui skoor muutus
-                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
-                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+                    ball.Move();
+
+                    if (ball.getLeftScoresFlag())
+                    {
+                        ball.Center();
+                        ball.resetScoreFlags();
+                        ball.initializeVelocitiesMoveLeft();
+                        paddle1.resetPaddlePos();
+                        paddle2.resetPaddlePos();
+                        restartFlag = true;
+                        leftScore++;
+                        //vasak mängija saab punkti ning saab alustada
+                        //Uuendab akna nime, et skoor oleks uuendatud
+                        windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+                        SDL_SetWindowTitle(window, windowTitle.c_str());
+                        leftPlayerStarts = true;
+
+                        //Teeme uue Texture objekti vaid siis, kui skoor muutus
+                        surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
+                        Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+                    }
+                    else if (ball.getRightScoresFlag())
+                    {
+                        ball.Center();
+                        ball.resetScoreFlags();
+                        ball.initializeVelocitiesMoveRight();
+                        paddle1.resetPaddlePos();
+                        paddle2.resetPaddlePos();
+                        restartFlag = true;
+                        rightScore++;
+                        //parem mängija saab punkti ning saab alustada
+                        //Uuendab akna nime, et skoor oleks uuendatud
+                        windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+                        SDL_SetWindowTitle(window, windowTitle.c_str());
+                        leftPlayerStarts = false;
+
+                        //Teeme uue Texture objekti vaid siis, kui skoor muutus
+                        surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
+                        Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+                    }
+                    //Saab skoori terminali printida
+                    //std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
                 }
-                           //Saab skoori terminali printida
-                           //std::cout << "Left Player Score: " << leftScore << "  |  Right Player Score: " << rightScore << std::endl;
             }
     
             accumulatedTime -= TIME_STEP;
@@ -202,10 +210,14 @@ int main(int argc, char* args[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        // draw game objects
-        paddle1.render();
-        paddle2.render();
-        ball.Draw(renderer);
+        //Joonista mänguobjektid vaid siis, kui oleme menüüst väljas
+        if (!SHOW_MENU_FLAG)
+        {
+            // draw game objects
+            paddle1.render();
+            paddle2.render();
+            ball.Draw(renderer);
+        }
 
         SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //DEBUG LINE
 
