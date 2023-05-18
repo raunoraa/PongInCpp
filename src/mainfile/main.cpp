@@ -58,7 +58,7 @@ int main(int argc, char* args[])
     Uint8 nupu_b = 255;
 
     //LOOME MENÜÜ NUPUD
-    Button pvp(renderer, 100, 100, 200, 200, nupu_r, nupu_g, nupu_b);
+    Button pvp(renderer, 460, 200, 400, 100, nupu_r, nupu_g, nupu_b); //PVP NUPP
     
     TTF_Init();
 
