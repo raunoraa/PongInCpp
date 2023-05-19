@@ -58,7 +58,11 @@ int main(int argc, char* args[])
     Uint8 nupu_b = 255;
 
     //LOOME MENÜÜ NUPUD
-    Button pvp(renderer, 460, 200, 400, 100, nupu_r, nupu_g, nupu_b); //PVP NUPP
+    Button pvp(renderer, 460, 250, 400, 100, nupu_r, nupu_g, nupu_b); //PVP NUPP
+    Button controls(renderer, 460, 400, 400, 100, nupu_r, nupu_g, nupu_b); //selgitav tekst controlsist (TODO)
+    Button exit(renderer, 460, 550, 400, 100, nupu_r, nupu_g, nupu_b);
+
+    Button back(renderer, 460, 100, 400, 100, nupu_r, nupu_g, nupu_b); //controls menüü jaoks tagasi main menu-sse minekuks
     
     TTF_Init();
 
@@ -109,12 +113,19 @@ int main(int argc, char* args[])
     ball.initializeVelocitiesMoveLeft();
 
     bool SHOW_MENU_FLAG = true;
+    bool EXIT_GAME_FLAG = false;
+    bool SHOW_CONTROLS_MENU_FLAG = false;
 
     SDL_Event event;
 
 
     while (running)
     {
+        if (EXIT_GAME_FLAG)
+        {
+            break;
+        }
+        
 
         Uint32 currentTime = SDL_GetTicks();
         Uint32 deltaTime = currentTime - lastUpdateTime;
@@ -137,15 +148,46 @@ int main(int argc, char* args[])
         const Uint8 *keyboardState = SDL_GetKeyboardState(NULL);
 
         while (accumulatedTime >= TIME_STEP) {
+
+            if (EXIT_GAME_FLAG)
+            {
+                break;
+            }
+            
             
             if (SHOW_MENU_FLAG)
             {
-                //SIIN KUVAME MENÜÜ NUPUD
-
+                //SIIN VAATAME, KAS NUPU PEALE VAJUTATI
                 if (pvp.checkIfPressed())
                 {
                     SHOW_MENU_FLAG = false;
                 }
+
+                else if (exit.checkIfPressed())
+                {
+                    EXIT_GAME_FLAG = true;
+                }
+                
+                else if (controls.checkIfPressed())
+                {
+                    SHOW_CONTROLS_MENU_FLAG = true;
+                    SHOW_MENU_FLAG = false;
+
+                    //teeme controls menüü teksti (peab vist tegema mitu objekti, sest ei tuvasta reavahetuse sümbolit)
+                    //controls teksti sisu võiks olla sama, mis rida all välja kommenteeritud tekstis
+                    //surfaceMessage = TTF_RenderText_Solid(Sans, "Controls\n\n\nLeft Player Paddle Up: W\nLeft Player Paddle Down: S\n\nRight Player Paddle Up: UP\nRight Player Paddle Down: DOWN", White);
+                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+                }
+            } else if (SHOW_CONTROLS_MENU_FLAG)
+            {
+
+                if (back.checkIfPressed())
+                {
+                    SHOW_CONTROLS_MENU_FLAG = false;
+                    SHOW_MENU_FLAG = true;
+                }
+                
             }
             else{
                 if (restartFlag)
@@ -218,20 +260,28 @@ int main(int argc, char* args[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        //Joonista mänguobjektid vaid siis, kui oleme menüüst väljas
-        if (!SHOW_MENU_FLAG)
+
+        if (SHOW_MENU_FLAG)
         {
+            //JOONISTAME MENÜÜ
+            pvp.render();
+            controls.render();
+            exit.render();
+        } 
+        else if (SHOW_CONTROLS_MENU_FLAG)
+        {
+            back.render();
+            //SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
+        }
+        else
+        {
+            //Joonista mänguobjektid vaid siis, kui oleme menüüdest väljas
             // draw game objects
             paddle1.render();
             paddle2.render();
             ball.Draw(renderer);
             SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
-        } else
-        {
-            //JOONISTAME MENÜÜ
-            pvp.render();
         }
-        
 
         SDL_RenderPresent(renderer);
 
