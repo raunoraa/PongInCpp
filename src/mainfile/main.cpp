@@ -19,7 +19,6 @@ int accumulatedTime = 0;
 int leftScore = 0;
 int rightScore = 0;
 
-
 void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboardState){
     //player1
     if (keyboardState[SDL_SCANCODE_W]) {
@@ -92,6 +91,9 @@ int main(int argc, char* args[])
     SDL_Surface * ControlsSurface = IMG_Load("./assets/controls.png");
     SDL_Texture * ControlsTexture = SDL_CreateTextureFromSurface(renderer, ControlsSurface);
 
+    SDL_Surface * PlayMenuSurface = IMG_Load("./assets/2ndmenu.png");
+    SDL_Texture * PlayMenuTexture = SDL_CreateTextureFromSurface(renderer, PlayMenuSurface);
+
 
     TTF_Init();
 
@@ -122,10 +124,10 @@ int main(int argc, char* args[])
     
     SDL_Rect victoryMessage_rect; //create a rect
 
-    victoryMessage_rect.h = 200;
-    victoryMessage_rect.w = 200;
-    victoryMessage_rect.x = 550;
-    victoryMessage_rect.y = 150;
+    victoryMessage_rect.h = 180;
+    victoryMessage_rect.w = 400;
+    victoryMessage_rect.x = 450;
+    victoryMessage_rect.y = 170;
 
 
     //Initialize the audio system
@@ -172,10 +174,10 @@ int main(int argc, char* args[])
     bool BEST_OF_5_FLAG = false;
     bool BEST_OF_15_FLAG = false;
 
-    Button bestOf5(renderer, 0, 165, 372, 75, nupu_r, nupu_g, nupu_b);
-    Button bestOf15(renderer, 0, 265, 372, 75, nupu_r, nupu_g, nupu_b);
-    Button infinite(renderer, 0, 365, 372, 75, nupu_r, nupu_g, nupu_b);
-    Button backToMain(renderer, 0, 465, 372, 75, nupu_r, nupu_g, nupu_b);
+    Button bestOf5(renderer, 0, 93, 450, 75, nupu_r, nupu_g, nupu_b);
+    Button bestOf15(renderer, 0, 220, 450, 75, nupu_r, nupu_g, nupu_b);
+    Button infinite(renderer, 0, 345, 450, 75, nupu_r, nupu_g, nupu_b);
+    Button backToMain(renderer, 0, 475, 450, 75, nupu_r, nupu_g, nupu_b);
 
     bool GAME_END = false; // mäng läbi (ainult best of 5 ja 15 korral)
     bool CHANGE_TEXT = false;
@@ -255,20 +257,24 @@ int main(int argc, char* args[])
                 {
                     SHOW_PLAY_OPTIONS_MENU_FLAG = false;
                     BEST_OF_5_FLAG = true;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
                 else if (bestOf15.checkIfPressed())
                 {
                     SHOW_PLAY_OPTIONS_MENU_FLAG = false;
                     BEST_OF_15_FLAG = true;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
                 else if (infinite.checkIfPressed())
                 {
                     SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
                 else if (backToMain.checkIfPressed())
                 {
                     SHOW_PLAY_OPTIONS_MENU_FLAG = false;
                     SHOW_MENU_FLAG = true;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
             }
             else if (SHOW_CONTROLS_MENU_FLAG)
@@ -482,6 +488,7 @@ int main(int argc, char* args[])
             bestOf15.render();
             infinite.render();
             backToMain.render();
+            SDL_RenderCopy(renderer, PlayMenuTexture, NULL, NULL);
         }
         else
         {
