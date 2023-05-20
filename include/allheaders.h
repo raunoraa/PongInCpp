@@ -5,5 +5,4 @@
 
 #include "paddle.h"
 #include "ball.h"
-#include "score.h"
 #include "button.h"
