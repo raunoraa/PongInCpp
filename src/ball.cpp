@@ -1,4 +1,5 @@
 #include "../include/ball.h"
+#include "ball.h"
 
 
 Ball::Ball() {
@@ -32,13 +33,23 @@ void Ball::Draw(SDL_Renderer* renderer) {
     SDL_RenderFillRect(renderer, &rect);
 }
 
+bool Ball::getPaddleHit(){
+    return m_PADDLEHIT;
+}
+
+bool Ball::getWallHit()
+{
+    return m_WALLHIT;
+}
+
 void Ball::CheckPaddleCollisions() {
-    extern void PlaySound(const char* fileName);
+
     // Check collision with left paddle
     //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
     if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height >= m_leftPaddlePosY && m_y + m_height <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
-        PlaySound("./assets/paddle.flac");
+        m_PADDLEHIT = true;
+
         //x kiirust on vaja ainult vastupidiseks muuta 
         //(igaks juhuks lisame palli x positsioonile ka 1, et mitu korda siia if harusse kokkupuutel paddle'iga ei jõutaks)
         m_x = m_leftPaddlePosX + m_leftPaddleWidth + 1;
@@ -65,12 +76,13 @@ void Ball::CheckPaddleCollisions() {
     
 
     // Check collision with right paddle
-    if (m_x + m_width == m_rightPaddlePosX && (m_y + m_height >= m_rightPaddlePosY && m_y + m_height <= m_rightPaddlePosY + m_rightPaddleHeight))
+    else if (m_x + m_width == m_rightPaddlePosX && (m_y + m_height >= m_rightPaddlePosY && m_y + m_height <= m_rightPaddlePosY + m_rightPaddleHeight))
     {                
         /* Siia tuleb mingi targem loogika, et paddle abil saaks kontrollida palli liikumist */
         m_x = m_rightPaddlePosX - m_width - 1;
         m_velocityX = -m_velocityX;
-        PlaySound("./assets/paddle.flac");
+
+        m_PADDLEHIT = true;
 
         //muudame palli y kiirust vastavalt sellele, kuhu pall paddle'il maandus (annab mängijale rohkem kontrolli palli üle)
         //vaatame, kaugel on palli keskpunkt paddle'i keskpunktist
@@ -82,31 +94,42 @@ void Ball::CheckPaddleCollisions() {
         if (m_velocityY < -2)
         {
             m_velocityY = -2;
-            PlaySound("paddle.flac");
         }
 
         if (m_velocityY > 2)
         {
             m_velocityY = 2;
-            PlaySound("paddle.flac");
         }
 
+    } 
+
+    else
+    {
+        m_PADDLEHIT = false;
     }
     
+
 }
 
 void Ball::CheckWallCollisions() {
-    extern void PlaySound(const char* fileName);
+
+
+
     // Check collision with top wall
     if (m_y <= 0) {
+        m_WALLHIT = true;
         m_velocityY = -m_velocityY;
-        PlaySound("./assets/wall.flac");
     }
     // Check collision with bottom wall
-    if (m_y + m_height >= m_SCREEN_HEIGHT) {
+    else if (m_y + m_height >= m_SCREEN_HEIGHT) {
+        m_WALLHIT = true;
         m_velocityY = -m_velocityY;
-        PlaySound("./assets/wall.flac");
     }
+    else
+    {
+        m_WALLHIT = false; //ülemist ega alumist seina sel juhul hetkel ei puutu
+    }
+    
 
     //pall on paremal pool paremat paddle'it, vasak mängija saab punkti
     if (m_x + m_width >= m_SCREEN_WIDTH) {

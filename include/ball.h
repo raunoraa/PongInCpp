@@ -32,6 +32,8 @@ class Ball {
         void initializeVelocitiesMoveLeft(); //y kiiruseks saab -1 ning x kiiruseks saab -1
         void initializeVelocitiesMoveRight(); //y kiiruseks saab -1 ning x kiiruseks saab 1
 
+        bool getPaddleHit(); //paddle puutumise heli jaoks
+        bool getWallHit();
 
     private:
         int m_x;
@@ -56,6 +58,8 @@ class Ball {
         bool m_leftScores{false};
         bool m_rightScores{false};
 
+        bool m_PADDLEHIT{false};
+        bool m_WALLHIT{false};
 };
 
 #endif

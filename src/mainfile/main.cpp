@@ -234,6 +234,20 @@ int main(int argc, char* args[])
 
                     ball.Move();
 
+                    if (ball.getPaddleHit()) //Paddle puutumise heli jaoks
+                    {
+                        Mix_Volume(1, 50);
+                        Mix_PlayChannel(1, paddlesound, 0);
+                    }
+                    
+                    if (ball.getWallHit()) //Seina puutumise heli jaoks
+                    {
+                        Mix_Volume(1, 50);
+                        Mix_PlayChannel(1, wallsound, 0);
+                    }
+                    
+
+
                     if (ball.getLeftScoresFlag())
                     {
                         ball.Center();
