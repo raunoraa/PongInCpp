@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL2/SDL_mixer.h>
 #include "../include/allheaders.h"
 #include <iostream>
 #include <string>
@@ -84,6 +85,11 @@ int main(int argc, char* args[])
     Message_rect.w = 200;
     Message_rect.x = 550;
     Message_rect.y = 50;
+
+    //Initialize the audio system
+    Mix_OpenAudio(48000, AUDIO_S16SYS, 1, 1024);
+    
+    Mix_Chunk* sound = Mix_LoadWAV("./assets/score.flac");
     
 
     Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
@@ -221,6 +227,9 @@ int main(int argc, char* args[])
                         //Uuendab akna nime, et skoor oleks uuendatud
                         windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                         SDL_SetWindowTitle(window, windowTitle.c_str());
+                        //Play the sound file with a volume of 50
+                        Mix_Volume(1, 50);
+                        Mix_PlayChannel(1, sound, 0);
                         leftPlayerStarts = true;
 
                         //Teeme uue Texture objekti vaid siis, kui skoor muutus
@@ -295,6 +304,7 @@ int main(int argc, char* args[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(Message);
+    Mix_FreeChunk(sound);
 
     TTF_Quit();
     SDL_Quit();
