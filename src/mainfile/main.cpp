@@ -36,6 +36,23 @@ void CheckAndMovePaddles(Paddle& paddle1, Paddle& paddle2, const Uint8* keyboard
         paddle2.move(PADDLE_SPEED);
     }
 }
+void PlaySound(const char* fileName)
+        {
+            //Load a sound file into memory
+            Mix_Chunk* sound = Mix_LoadWAV(fileName);
+            if (!sound)
+            {
+                printf("Error loading sound file!\n");
+                return;
+            }
+
+            //Play the sound file with a volume of 50
+            Mix_Volume(1, 50);
+            Mix_PlayChannel(1, sound, 0);
+
+            //Free up the memory associated with the sound file
+            Mix_FreeChunk(sound);
+}
 
 int main(int argc, char* args[])
 {
@@ -88,8 +105,11 @@ int main(int argc, char* args[])
 
     //Initialize the audio system
     Mix_OpenAudio(48000, AUDIO_S16SYS, 1, 1024);
-    
-    Mix_Chunk* sound = Mix_LoadWAV("./assets/score.flac");
+
+
+    Mix_Chunk* paddlesound = Mix_LoadWAV("./assets/paddle.flac");
+    Mix_Chunk* wallsound = Mix_LoadWAV("./assets/wall.flac");
+    Mix_Chunk* score = Mix_LoadWAV("./assets/score.flac");
     
 
     Paddle paddle1(renderer, 20*3, SCREEN_HEIGHT/3, 20, 100, SCREEN_HEIGHT);
@@ -227,9 +247,9 @@ int main(int argc, char* args[])
                         //Uuendab akna nime, et skoor oleks uuendatud
                         windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                         SDL_SetWindowTitle(window, windowTitle.c_str());
-                        //Play the sound file with a volume of 50
+                        //Mängib heli "score"
                         Mix_Volume(1, 50);
-                        Mix_PlayChannel(1, sound, 0);
+                        Mix_PlayChannel(1, score, 0);
                         leftPlayerStarts = true;
 
                         //Teeme uue Texture objekti vaid siis, kui skoor muutus
@@ -249,6 +269,9 @@ int main(int argc, char* args[])
                         //Uuendab akna nime, et skoor oleks uuendatud
                         windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
                         SDL_SetWindowTitle(window, windowTitle.c_str());
+                        //Mängib heli "score"
+                        Mix_Volume(1, 50);
+                        Mix_PlayChannel(1, score, 0);
                         leftPlayerStarts = false;
 
                         //Teeme uue Texture objekti vaid siis, kui skoor muutus
@@ -304,7 +327,9 @@ int main(int argc, char* args[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(Message);
-    Mix_FreeChunk(sound);
+    Mix_FreeChunk(score);
+    Mix_FreeChunk(paddlesound);
+    Mix_FreeChunk(wallsound);
 
     TTF_Quit();
     SDL_Quit();

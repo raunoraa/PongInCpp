@@ -1,5 +1,6 @@
 #include "../include/ball.h"
 
+
 Ball::Ball() {
     m_x = 640;
     m_y = 360;
@@ -32,12 +33,12 @@ void Ball::Draw(SDL_Renderer* renderer) {
 }
 
 void Ball::CheckPaddleCollisions() {
-
+    extern void PlaySound(const char* fileName);
     // Check collision with left paddle
     //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
     if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height >= m_leftPaddlePosY && m_y + m_height <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
-        
+        PlaySound("./assets/paddle.flac");
         //x kiirust on vaja ainult vastupidiseks muuta 
         //(igaks juhuks lisame palli x positsioonile ka 1, et mitu korda siia if harusse kokkupuutel paddle'iga ei jõutaks)
         m_x = m_leftPaddlePosX + m_leftPaddleWidth + 1;
@@ -69,6 +70,7 @@ void Ball::CheckPaddleCollisions() {
         /* Siia tuleb mingi targem loogika, et paddle abil saaks kontrollida palli liikumist */
         m_x = m_rightPaddlePosX - m_width - 1;
         m_velocityX = -m_velocityX;
+        PlaySound("./assets/paddle.flac");
 
         //muudame palli y kiirust vastavalt sellele, kuhu pall paddle'il maandus (annab mängijale rohkem kontrolli palli üle)
         //vaatame, kaugel on palli keskpunkt paddle'i keskpunktist
@@ -80,11 +82,13 @@ void Ball::CheckPaddleCollisions() {
         if (m_velocityY < -2)
         {
             m_velocityY = -2;
+            PlaySound("paddle.flac");
         }
 
         if (m_velocityY > 2)
         {
             m_velocityY = 2;
+            PlaySound("paddle.flac");
         }
 
     }
@@ -92,13 +96,16 @@ void Ball::CheckPaddleCollisions() {
 }
 
 void Ball::CheckWallCollisions() {
+    extern void PlaySound(const char* fileName);
     // Check collision with top wall
     if (m_y <= 0) {
         m_velocityY = -m_velocityY;
+        PlaySound("./assets/wall.flac");
     }
     // Check collision with bottom wall
     if (m_y + m_height >= m_SCREEN_HEIGHT) {
         m_velocityY = -m_velocityY;
+        PlaySound("./assets/wall.flac");
     }
 
     //pall on paremal pool paremat paddle'it, vasak mängija saab punkti
