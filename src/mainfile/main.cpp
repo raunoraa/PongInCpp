@@ -105,7 +105,6 @@ int main(int argc, char* args[])
 
     // now you can convert it into a texture
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
-
     
     SDL_Rect Message_rect; //create a rect
 
@@ -113,6 +112,21 @@ int main(int argc, char* args[])
     Message_rect.w = 200;
     Message_rect.x = 550;
     Message_rect.y = 50;
+
+
+    SDL_Surface* victorySurface =
+    TTF_RenderText_Solid(Sans, "Victory Message", White);
+
+    // now you can convert it into a texture
+    SDL_Texture* victoryMessage = SDL_CreateTextureFromSurface(renderer, victorySurface);
+    
+    SDL_Rect victoryMessage_rect; //create a rect
+
+    victoryMessage_rect.h = 200;
+    victoryMessage_rect.w = 200;
+    victoryMessage_rect.x = 550;
+    victoryMessage_rect.y = 150;
+
 
     //Initialize the audio system
     Mix_OpenAudio(48000, AUDIO_S16SYS, 1, 1024);
@@ -153,8 +167,21 @@ int main(int argc, char* args[])
     bool EXIT_GAME_FLAG = false;
     bool SHOW_CONTROLS_MENU_FLAG = false;
 
-    SDL_Event event;
 
+    bool SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+    bool BEST_OF_5_FLAG = false;
+    bool BEST_OF_15_FLAG = false;
+
+    Button bestOf5(renderer, 0, 165, 372, 75, nupu_r, nupu_g, nupu_b);
+    Button bestOf15(renderer, 0, 265, 372, 75, nupu_r, nupu_g, nupu_b);
+    Button infinite(renderer, 0, 365, 372, 75, nupu_r, nupu_g, nupu_b);
+    Button backToMain(renderer, 0, 465, 372, 75, nupu_r, nupu_g, nupu_b);
+
+    bool GAME_END = false; // mäng läbi (ainult best of 5 ja 15 korral)
+    
+    bool PLAYER1_WON = false; //vasak mängija võitis
+
+    SDL_Event event;
 
     while (running)
     {
@@ -198,6 +225,7 @@ int main(int argc, char* args[])
                 if (pvp.checkIfPressed())
                 {
                     SHOW_MENU_FLAG = false;
+                    SHOW_PLAY_OPTIONS_MENU_FLAG = true;
                     Mix_PlayChannel(1, wallsound, 0);
                 }
 
@@ -219,7 +247,30 @@ int main(int argc, char* args[])
                     Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
 
                 }
-            } else if (SHOW_CONTROLS_MENU_FLAG)
+            } 
+            else if (SHOW_PLAY_OPTIONS_MENU_FLAG)
+            {
+                if (bestOf5.checkIfPressed())
+                {
+                    SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+                    BEST_OF_5_FLAG = true;
+                }
+                else if (bestOf15.checkIfPressed())
+                {
+                    SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+                    BEST_OF_15_FLAG = true;
+                }
+                else if (infinite.checkIfPressed())
+                {
+                    SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+                }
+                else if (backToMain.checkIfPressed())
+                {
+                    SHOW_PLAY_OPTIONS_MENU_FLAG = false;
+                    SHOW_MENU_FLAG = true;
+                }
+            }
+            else if (SHOW_CONTROLS_MENU_FLAG)
             {
 
                 if (back.checkIfPressed())
@@ -231,9 +282,58 @@ int main(int argc, char* args[])
                 
             }
             else{
+                //kui vajutati ESC, siis mine tagasi main menüüsse
+
+
+                if (keyboardState[SDL_SCANCODE_ESCAPE])
+                {
+                    SHOW_MENU_FLAG = true;
+                    BEST_OF_5_FLAG = false;
+                    BEST_OF_15_FLAG = false;
+
+                    ball.Center();
+                    ball.resetScoreFlags();
+                    ball.initializeVelocitiesMoveLeft();
+                    paddle1.resetPaddlePos();
+                    paddle2.resetPaddlePos();
+                    leftScore = 0;
+                    rightScore = 0;
+
+                    //vasak mängija saab punkti ning saab alustada
+                    //Uuendab akna nime, et skoor oleks uuendatud
+                    windowTitle = "Pong Game - Left Player Score: " + std::to_string(leftScore) + "  |  Right Player Score: " + std::to_string(rightScore);
+                    SDL_SetWindowTitle(window, windowTitle.c_str());
+
+                    surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
+                    Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+
+                    if (GAME_END)
+                    {
+                        GAME_END = false;
+                        leftPlayerStarts = true;
+                        break;
+                    }
+                    
+                }
+                
+
                 if (restartFlag)
                 {
-                    if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
+                    if (GAME_END)
+                    {
+                        std::string end_tekst;
+                        if (PLAYER1_WON)
+                        {
+                            end_tekst = "Left Player Won!";
+                        } else
+                        {
+                            end_tekst = "Right Player Won!";
+                        }
+                        
+                        victorySurface = TTF_RenderText_Solid(Sans, end_tekst.c_str(), White);
+                        victoryMessage = SDL_CreateTextureFromSurface(renderer, victorySurface);
+                    }
+                    else if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
                         restartFlag = false;
                     }
                     else if (!leftPlayerStarts && (keyboardState[SDL_SCANCODE_UP] || keyboardState[SDL_SCANCODE_DOWN]))
@@ -281,6 +381,23 @@ int main(int argc, char* args[])
                         Mix_PlayChannel(1, score, 0);
                         leftPlayerStarts = true;
 
+                        if (BEST_OF_5_FLAG)
+                        {
+                            if (leftScore > 2)
+                            {
+                                GAME_END = true;
+                                PLAYER1_WON = true;
+                            }
+                        } else if (BEST_OF_15_FLAG)
+                        {
+                            if (leftScore > 7)
+                            {
+                                GAME_END = true;
+                                PLAYER1_WON = true;
+                            }
+                            
+                        }                    
+
                         //Teeme uue Texture objekti vaid siis, kui skoor muutus
                         surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
                         Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
@@ -302,6 +419,21 @@ int main(int argc, char* args[])
                         Mix_Volume(1, 50);
                         Mix_PlayChannel(1, score, 0);
                         leftPlayerStarts = false;
+
+                        if (BEST_OF_5_FLAG)
+                        {
+                            if (rightScore > 2)
+                            {
+                                GAME_END = true;
+                            }
+                        } else if (BEST_OF_15_FLAG)
+                        {
+                            if (rightScore > 7)
+                            {
+                                GAME_END = true;
+                            }
+                            
+                        } 
 
                         //Teeme uue Texture objekti vaid siis, kui skoor muutus
                         surfaceMessage = TTF_RenderText_Solid(Sans, (std::to_string(leftScore) + " : " + std::to_string(rightScore)).c_str(), White);
@@ -336,6 +468,13 @@ int main(int argc, char* args[])
             //SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
             SDL_RenderCopy(renderer, ControlsTexture, NULL, NULL);
         }
+        else if (SHOW_PLAY_OPTIONS_MENU_FLAG)
+        {
+            bestOf5.render();
+            bestOf15.render();
+            infinite.render();
+            backToMain.render();
+        }
         else
         {
             //Joonista mänguobjektid vaid siis, kui oleme menüüdest väljas
@@ -344,6 +483,11 @@ int main(int argc, char* args[])
             paddle2.render();
             ball.Draw(renderer);
             SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
+            if (GAME_END)
+            {
+                SDL_RenderCopy(renderer, victoryMessage, NULL, &victoryMessage_rect); //RENDERDA VÕIDU TEKST
+            }
+            
         }
 
         SDL_RenderPresent(renderer);
@@ -358,6 +502,7 @@ int main(int argc, char* args[])
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_DestroyTexture(Message);
+    SDL_DestroyTexture(victoryMessage);
     Mix_FreeChunk(score);
     Mix_FreeChunk(paddlesound);
     Mix_FreeChunk(wallsound);
