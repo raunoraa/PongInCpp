@@ -198,17 +198,20 @@ int main(int argc, char* args[])
                 if (pvp.checkIfPressed())
                 {
                     SHOW_MENU_FLAG = false;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
 
                 else if (exit.checkIfPressed())
                 {
                     EXIT_GAME_FLAG = true;
+                    Mix_PlayChannel(1, wallsound, 0);
                 }
                 
                 else if (controls.checkIfPressed())
                 {
                     SHOW_CONTROLS_MENU_FLAG = true;
                     SHOW_MENU_FLAG = false;
+                    Mix_PlayChannel(1, wallsound, 0);
 
                     //teeme controls menüü teksti (peab vist tegema mitu objekti, sest ei tuvasta reavahetuse sümbolit)
                     //controls teksti sisu võiks olla sama, mis rida all välja kommenteeritud tekstis
@@ -222,6 +225,7 @@ int main(int argc, char* args[])
                 if (back.checkIfPressed())
                 {
                     SHOW_CONTROLS_MENU_FLAG = false;
+                    Mix_PlayChannel(1, wallsound, 0);
                     SHOW_MENU_FLAG = true;
                 }
                 
