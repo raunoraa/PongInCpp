@@ -77,11 +77,11 @@ int main(int argc, char* args[])
     Uint8 nupu_b = 255;
 
     //LOOME MENÜÜ NUPUD
-    Button pvp(renderer, 460, 250, 400, 100, nupu_r, nupu_g, nupu_b); //PVP NUPP
-    Button controls(renderer, 460, 400, 400, 100, nupu_r, nupu_g, nupu_b); //selgitav tekst controlsist (TODO)
-    Button exit(renderer, 460, 550, 400, 100, nupu_r, nupu_g, nupu_b);
+    Button pvp(renderer, 457, 265, 372, 75, nupu_r, nupu_g, nupu_b); //PVP NUPP
+    Button controls(renderer, 457, 380, 372, 75, nupu_r, nupu_g, nupu_b); //selgitav tekst controlsist (TODO)
+    Button exit(renderer, 457, 500, 372, 75, nupu_r, nupu_g, nupu_b);
 
-    Button back(renderer, 460, 100, 400, 100, nupu_r, nupu_g, nupu_b); //controls menüü jaoks tagasi main menu-sse minekuks
+    Button back(renderer, 62, 567, 400, 87, nupu_r, nupu_g, nupu_b); //controls menüü jaoks tagasi main menu-sse minekuks
 
     IMG_Init(IMG_INIT_PNG);
 
@@ -93,13 +93,6 @@ int main(int argc, char* args[])
     SDL_Texture * ControlsTexture = SDL_CreateTextureFromSurface(renderer, ControlsSurface);
 
 
-
-
-
-
-
-
-    
     TTF_Init();
 
     //this opens a font style and sets a size
