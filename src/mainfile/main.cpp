@@ -82,6 +82,23 @@ int main(int argc, char* args[])
     Button exit(renderer, 460, 550, 400, 100, nupu_r, nupu_g, nupu_b);
 
     Button back(renderer, 460, 100, 400, 100, nupu_r, nupu_g, nupu_b); //controls menüü jaoks tagasi main menu-sse minekuks
+
+    IMG_Init(IMG_INIT_PNG);
+
+
+    SDL_Surface * MenuSurface = IMG_Load("./assets/menu.png");
+    SDL_Texture * MenuTexture = SDL_CreateTextureFromSurface(renderer, MenuSurface);
+
+    SDL_Surface * ControlsSurface = IMG_Load("./assets/controls.png");
+    SDL_Texture * ControlsTexture = SDL_CreateTextureFromSurface(renderer, ControlsSurface);
+
+
+
+
+
+
+
+
     
     TTF_Init();
 
@@ -314,11 +331,13 @@ int main(int argc, char* args[])
             pvp.render();
             controls.render();
             exit.render();
+            SDL_RenderCopy(renderer, MenuTexture, NULL, NULL);
         } 
         else if (SHOW_CONTROLS_MENU_FLAG)
         {
             back.render();
             //SDL_RenderCopy(renderer, Message, NULL, &Message_rect); //RENDERDA TEKST
+            SDL_RenderCopy(renderer, ControlsTexture, NULL, NULL);
         }
         else
         {
