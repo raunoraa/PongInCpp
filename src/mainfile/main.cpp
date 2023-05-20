@@ -178,6 +178,7 @@ int main(int argc, char* args[])
     Button backToMain(renderer, 0, 465, 372, 75, nupu_r, nupu_g, nupu_b);
 
     bool GAME_END = false; // mäng läbi (ainult best of 5 ja 15 korral)
+    bool CHANGE_TEXT = false;
     
     bool PLAYER1_WON = false; //vasak mängija võitis
 
@@ -321,6 +322,8 @@ int main(int argc, char* args[])
                 {
                     if (GAME_END)
                     {
+                        if (CHANGE_TEXT)
+                        {
                         std::string end_tekst;
                         if (PLAYER1_WON)
                         {
@@ -329,9 +332,10 @@ int main(int argc, char* args[])
                         {
                             end_tekst = "Right Player Won!";
                         }
-                        
                         victorySurface = TTF_RenderText_Solid(Sans, end_tekst.c_str(), White);
                         victoryMessage = SDL_CreateTextureFromSurface(renderer, victorySurface);
+                        CHANGE_TEXT = false;
+                        }
                     }
                     else if(leftPlayerStarts && (keyboardState[SDL_SCANCODE_W] || keyboardState[SDL_SCANCODE_S])){
                         restartFlag = false;
@@ -387,6 +391,7 @@ int main(int argc, char* args[])
                             {
                                 GAME_END = true;
                                 PLAYER1_WON = true;
+                                CHANGE_TEXT = true;
                             }
                         } else if (BEST_OF_15_FLAG)
                         {
@@ -394,6 +399,7 @@ int main(int argc, char* args[])
                             {
                                 GAME_END = true;
                                 PLAYER1_WON = true;
+                                CHANGE_TEXT = true;
                             }
                             
                         }                    
@@ -424,12 +430,14 @@ int main(int argc, char* args[])
                         {
                             if (rightScore > 2)
                             {
+                                CHANGE_TEXT = true;
                                 GAME_END = true;
                             }
                         } else if (BEST_OF_15_FLAG)
                         {
                             if (rightScore > 7)
                             {
+                                CHANGE_TEXT = true;
                                 GAME_END = true;
                             }
                             
