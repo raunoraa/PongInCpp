@@ -46,7 +46,7 @@ void Ball::CheckPaddleCollisions() {
 
     // Check collision with left paddle
     //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
-    if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height >= m_leftPaddlePosY && m_y + m_height <= m_leftPaddlePosY + m_leftPaddleHeight))
+    if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height >= m_leftPaddlePosY && m_y <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
         m_PADDLEHIT = true;
 
@@ -76,7 +76,7 @@ void Ball::CheckPaddleCollisions() {
     
 
     // Check collision with right paddle
-    else if (m_x + m_width == m_rightPaddlePosX && (m_y + m_height >= m_rightPaddlePosY && m_y + m_height <= m_rightPaddlePosY + m_rightPaddleHeight))
+    else if (m_x + m_width == m_rightPaddlePosX && (m_y + m_height >= m_rightPaddlePosY && m_y <= m_rightPaddlePosY + m_rightPaddleHeight))
     {                
         /* Siia tuleb mingi targem loogika, et paddle abil saaks kontrollida palli liikumist */
         m_x = m_rightPaddlePosX - m_width - 1;
