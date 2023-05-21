@@ -82,8 +82,8 @@ int main(int argc, char* args[])
 
     Button back(renderer, 62, 567, 400, 87, nupu_r, nupu_g, nupu_b); //controls menüü jaoks tagasi main menu-sse minekuks
 
+    //Laeme pildid mällu
     IMG_Init(IMG_INIT_PNG);
-
 
     SDL_Surface * MenuSurface = IMG_Load("./assets/menu.png");
     SDL_Texture * MenuTexture = SDL_CreateTextureFromSurface(renderer, MenuSurface);
@@ -97,7 +97,7 @@ int main(int argc, char* args[])
 
     TTF_Init();
 
-    //this opens a font style and sets a size
+    //Avab fondi ja määrab fondi suuruse, 200 sest muidu on tekst kandiline
     TTF_Font* Sans = TTF_OpenFont("./assets/OpenSansBold.ttf", 200);
     
     SDL_Color White = {255, 255, 255};
@@ -105,7 +105,6 @@ int main(int argc, char* args[])
     SDL_Surface* surfaceMessage =
         TTF_RenderText_Solid(Sans, "0 : 0", White);
 
-    // now you can convert it into a texture
     SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
     
     SDL_Rect Message_rect; //create a rect
@@ -119,7 +118,6 @@ int main(int argc, char* args[])
     SDL_Surface* victorySurface =
     TTF_RenderText_Solid(Sans, "Victory Message", White);
 
-    // now you can convert it into a texture
     SDL_Texture* victoryMessage = SDL_CreateTextureFromSurface(renderer, victorySurface);
     
     SDL_Rect victoryMessage_rect; //create a rect
