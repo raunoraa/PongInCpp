@@ -523,6 +523,8 @@ int main(int argc, char* args[])
 
     TTF_Quit();
     SDL_Quit();
+    IMG_Quit();
+    Mix_Quit();
     
 
     return 0;
