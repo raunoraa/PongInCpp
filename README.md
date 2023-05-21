@@ -6,7 +6,7 @@ Mängu saab ühe arvuti taga mängida teise inimese vastu.
 Skoori on võimalik näha nii akna nimes kui ka mänguväljal.
 On 3 erinevat mänguvõimalust: best of 5, best of 15 ja lõpmatu.
 Mängul on menüü, kus on võimalik navigeerida erinevate võimaluste vahel.
-Mängul on ka nupuvajutuse, skoorimise ja palli põrkamise heliefektid.
+Mängul on ka nupuvajutuse, skoorimise ja palli põrkamise heliefektid. Heliefektid võetud siit: https://www.youtube.com/watch?v=qhaS2uMNTjI&ab_channel=AnthonyCassimiro.
 
 # Mängu juhised
 Eesmärk on koguda punkte, põrgatades palli nii, et see läheks vastu teise mängija seina.
