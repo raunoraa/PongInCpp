@@ -297,6 +297,7 @@ int main(int argc, char* args[])
                     SHOW_MENU_FLAG = true;
                     BEST_OF_5_FLAG = false;
                     BEST_OF_15_FLAG = false;
+                    PLAYER1_WON = false;
 
                     ball.Center();
                     ball.resetScoreFlags();
