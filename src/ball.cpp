@@ -45,7 +45,6 @@ bool Ball::getWallHit()
 void Ball::CheckPaddleCollisions() {
 
     // Check collision with left paddle
-    //m_height/2 on seetõttu, et muuta hitboxe leebemaks (kui pool palli puutub veel paddle'iga, siis loe seda veel kokkupõrkeks)
     if (m_x == m_leftPaddlePosX + m_leftPaddleWidth && (m_y + m_height >= m_leftPaddlePosY && m_y <= m_leftPaddlePosY + m_leftPaddleHeight))
     {
         m_PADDLEHIT = true;
